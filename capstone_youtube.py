@@ -115,8 +115,8 @@ def get_comments_details(v_id):
         while True:
             response = youtube.commentThreads().list(part="snippet,replies",
                                                     videoId=v_id,
-                                                    maxResults=10).execute()
-                                                    #pageToken=next_page_token
+                                                    maxResults=100,
+                                                    pageToken=next_page_token).execute()
             for cmt in response['items']:
                 data = dict(Comment_id = cmt['id'],
                             Video_id = cmt['snippet']['videoId'],
@@ -127,9 +127,9 @@ def get_comments_details(v_id):
                             Reply_count = cmt['snippet']['totalReplyCount']
                            )
                 comment_data.append(data)
-            #next_page_token = response.get('nextPageToken')
-            #if next_page_token is None:
-             #   break
+            next_page_token = response.get('nextPageToken')
+            if next_page_token is None:
+                break
     except:
         pass
     return comment_data
